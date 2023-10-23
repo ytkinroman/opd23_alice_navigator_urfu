@@ -25,11 +25,15 @@ def main():
             try:
                 with sqlite3.connect("database.db") as db:
                     cursor = db.cursor()
-                    query = f""" SELECT * FROM testing WHERE c = '{c}' AND au = '{au}' """
+                    query = f""" SELECT * FROM testing WHERE c = '{c}' AND au = '{au}' OR aua = '{au}' """
                     cursor.execute(query)
                     res = cursor.fetchone()  # Картеж с данными из базы данных.
-                    text = str(res)
-                    response["response"]["text"] = text
+                    if res == None:
+                        text = text = "Не найдено..."
+                        response["response"]["text"] = text
+                    else:
+                        text = str(res)
+                        response["response"]["text"] = text
             except TypeError:
                 text = "Что-то не так..."
                 response["response"]["text"] = text
