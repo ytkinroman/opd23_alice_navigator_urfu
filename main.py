@@ -17,17 +17,18 @@ def main():
         }
     }
     if req["session"]["new"]:
-        response["response"]["text"] = "Первое сообщение"
+        response["response"]["text"] = "Я помогу найти тебе аудиторию. Какую аудиторию ты ищешь?"
     else:
         if req["request"]["original_utterance"]:
-            aua = (req["request"]["nlu"]["tokens"][0])
+            c = (req["request"]["nlu"]["tokens"][0])  # Корпус.
+            au = (req["request"]["nlu"]["tokens"][1]) # Аудитория.
             try:
                 with sqlite3.connect("database.db") as db:
                     cursor = db.cursor()
-                    query = f""" SELECT * FROM testing WHERE au = '{aua}' """
+                    query = f""" SELECT * FROM testing WHERE c = '{c}' AND au = '{au}' """
                     cursor.execute(query)
                     res = cursor.fetchone()  # Картеж с данными из базы данных.
-                    text = res[1]
+                    text = res[6]
                     response["response"]["text"] = text
             except TypeError:
                 text = "Что-то не так..."
