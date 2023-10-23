@@ -20,9 +20,18 @@ def main():
         response["response"]["text"] = "Первое сообщение"
     else:
         if req["request"]["original_utterance"]:
-            c = (req["request"]["nlu"]["tokens"][0])
-            text = (f"Ответ. {c}.")
-            response["response"]["text"] = text
+            aua = (req["request"]["nlu"]["tokens"][0])
+            try:
+                with sqlite3.connect("database.db") as db:
+                    cursor = db.cursor()
+                    query = f""" SELECT * FROM testing WHERE au = '{aua}' """
+                    cursor.execute(query)
+                    res = cursor.fetchone()  # Картеж с данными из базы данных.
+                    text = res[1]
+                    response["response"]["text"] = text
+            except TypeError:
+                text = "Что-то не так..."
+                response["response"]["text"] = text
     return json.dumps(response)
 
 
