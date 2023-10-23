@@ -28,9 +28,7 @@ def main():
                     query = f""" SELECT * FROM testing WHERE c = '{c}' AND au = '{au}' """
                     cursor.execute(query)
                     res = cursor.fetchone()  # Картеж с данными из базы данных.
-                    resC = res[2]
-                    resAd = res[6]
-                    text = str(f"Аудитория X - {resC}. Находиться по адресу: {resAd}.")
+                    text = str(res)
                     response["response"]["text"] = text
             except TypeError:
                 text = "Что-то не так..."
