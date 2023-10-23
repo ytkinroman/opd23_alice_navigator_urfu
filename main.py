@@ -1,13 +1,10 @@
-"""
-
-    Fuck it.
-
-"""
 import json
 import sqlite3
 from flask import Flask, request
 
+
 app = Flask(__name__)
+
 
 @app.route("/", methods=["POST"])
 def main():
@@ -31,18 +28,25 @@ def main():
             c = (req["request"]["nlu"]["tokens"][0])  # Корпус.
             au = (req["request"]["nlu"]["tokens"][1]) # Аудитория.
             # Обрабатываем.
+            text = f"Корпус не найден...{f} {au}"
+            response["response"]["text"] = text
+    return json.dumps(response) # Отправляем ответ.
+    
+    
+
+
+if __name__ == "__main__":
+    app.run()
+
+"""
             try:
                 with sqlite3.connect("database.db") as db:
                     cursor = db.cursor()
-                    query = f""" SELECT * FROM testing WHERE c = '{c}' AND au = '{au}' OR aua = '{au}' """
+                    query = f SELECT * FROM testing WHERE c = '{c}' AND au = '{au}' OR aua = '{au}' 
                     cursor.execute(query)
                     res = cursor.fetchone() # Картеж с данными из базы данных.
                     response["response"]["text"] = res
             except TypeError:
                 text = "Корпус не найден..."
                 response["response"]["text"] = text
-    return json.dumps(response) # Отправляем ответ.
-
-
-if __name__ == "__main__":
-    app.run()
+"""
