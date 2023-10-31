@@ -33,6 +33,8 @@ def main():
                         response["response"]["text"] = text
                     else:
                         text = str(res)
+                        #c2 = res[]
+                        #text = f"Аудитория {c}{au} - {n}. Находиться по адресу: {ad}. Вам нужно пройти в {f} крыло на {l} этаж. Построить маршрут до аудитории?")
                         response["response"]["text"] = text
             except TypeError:
                 text = "Что-то не так..."
