@@ -32,12 +32,12 @@ def main():
                         text = text = "Не найдено..."
                         response["response"]["text"] = text
                     else:
+                        t = res
                         action = ""
                         if t[5] == "цокольный":
                             action = "спуститься"
                         else:
                             action = "подняться"
-                        t = res
                         text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находиться по адресу: {t[6]}. Вам нужно пройти в {t[4]} крыло и {action} на {t[5]} этаж."
                         response["response"]["text"] = text
             except TypeError:
