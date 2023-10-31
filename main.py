@@ -29,7 +29,7 @@ def main():
                     cursor.execute(query)
                     res = cursor.fetchone()  # Картеж с данными из базы данных.
                     if res == None:
-                        text = text = "Не найдено..."
+                        text = text = "Аудитория не найдена..."
                         response["response"]["text"] = text
                     else:
                         t = res
