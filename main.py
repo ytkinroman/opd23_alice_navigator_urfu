@@ -34,7 +34,8 @@ def main():
                     else:
                         t = str(res)
                         text = f"Аудитория \"{t[0]}-{t[2]}\" - {t[1]}. Находиться по адресу: {t[6]}. Вам нужно пройти в {f[4]} крыло и на {f[5]} этаж."
-                        response["response"]["text"] = text
+                        email = text
+                        response["response"]["text"] = email
             except TypeError:
                 text = "Что-то не так..."
                 response["response"]["text"] = text
