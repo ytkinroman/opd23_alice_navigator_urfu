@@ -25,7 +25,7 @@ def main():
             try:
                 with sqlite3.connect("database.db") as db:
                     cursor = db.cursor()
-                    query = f""" SELECT * FROM testing WHERE c = '{c}' AND au = '{au}' OR aua = '{au}' """
+                    query = f""" SELECT * FROM test WHERE c = '{c}' AND au = '{au}' OR aua = '{au}' """
                     cursor.execute(query)
                     res = cursor.fetchone()  # Картеж с данными из базы данных.
                     if res == None:
