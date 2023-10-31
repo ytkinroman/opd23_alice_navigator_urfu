@@ -33,9 +33,8 @@ def main():
                         response["response"]["text"] = text
                     else:
                         t = str(res)
-                        text = f"Аудитория \"{t[0]}-{t[2]}\" - {t[1]}. Находиться по адресу: {t[6]}. Вам нужно пройти в {f[4]} крыло и на {f[5]} этаж."
-                        email = text
-                        response["response"]["text"] = email
+                        text = f"Аудитория \"{t[0]}-{t[2]}\" - {t[1]}. Находиться по адресу: {t[6]}. Вам нужно пройти в {t[4]} крыло и на {t[5]} этаж."
+                        response["response"]["text"] = text
             except TypeError:
                 text = "Что-то не так..."
                 response["response"]["text"] = text
