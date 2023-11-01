@@ -39,7 +39,23 @@ def main():
                         else:
                             action = "подняться"
                         text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находиться по адресу: {t[6]}. Вам нужно пройти в {t[4]} крыло и {action} на {t[5]} этаж."
-                        response["response"]["text"] = text
+
+                        response = {
+                            'response': {
+                                'text': text,
+                                'buttons': [
+                                    {
+                                        'title': 'Нажми меня',
+                                        'payload': {},
+                                        'url': 'https://yandex.ru/maps/?rtext=~56.840843,60.651053&rtt=mt'
+                                    }
+                                ],
+                                'end_session': False
+                            },
+                            'session': data['session'],
+                            'version': data['version']
+                        }
+                        
             except TypeError:
                 text = "Что-то не так..."
                 response["response"]["text"] = text
