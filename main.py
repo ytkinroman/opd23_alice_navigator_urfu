@@ -39,15 +39,21 @@ def main():
                         else:
                             action = "подняться"
                         text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находиться по адресу: {t[6]}. Вам нужно пройти в {t[4]} крыло и {action} на {t[5]} этаж."
-
+                        URL = ""
+                        urlR = "https://yandex.ru/maps/?rtext=~56.840843,60.651053&rtt=mt"
+                        urlC = "https://yandex.ru/maps/?rtext=~56.844934,60.650475&rtt=mt"
+                        if t[0].upper() == "С":
+                            URL = urlC
+                        else t[0].upper() == "Р":
+                            URL = urlR
                         response = {
                             'response': {
                                 'text': text,
                                 'buttons': [
                                     {
-                                        'title': 'Нажми меня',
+                                        'title': 'Построить маршрут',
                                         'payload': {},
-                                        'url': 'https://yandex.ru/maps/?rtext=~56.840843,60.651053&rtt=mt'
+                                        'url': URL
                                     }
                                 ],
                                 'end_session': False
