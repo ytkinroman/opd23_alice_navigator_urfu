@@ -44,7 +44,7 @@ def main():
                         urlC = "https://yandex.ru/maps/?rtext=~56.844934,60.650475&rtt=mt"
                         if t[0].upper() == "С":
                             URL = urlC
-                        else t[0].upper() == "Р":
+                        elif t[0].upper() == "Р":
                             URL = urlR
                         response = {
                             'response': {
