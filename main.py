@@ -52,8 +52,8 @@ def main():
                                 ],
                                 'end_session': False
                             },
-                            'session': data['session'],
-                            'version': data['version']
+                            "version": request.json["version"],
+                            "session": request.json["session"],
                         }
                         
             except TypeError:
