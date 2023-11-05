@@ -42,16 +42,7 @@ def main():
                         else:
                             action = "подняться"
                             text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно пройти в {t[4]} крыло и {action} на {t[5]} этаж."
-                        URL = ""
-                        urlR = "https://yandex.ru/maps/?rtext=~56.840843,60.651053&rtt=mt"  # Радиофак..
-                        urlC = "https://yandex.ru/maps/?rtext=~56.844934,60.650475&rtt=mt"  # Стройфак.
-                        urlT = "https://yandex.ru/maps/?rtext=~56.842693,60.655748&rtt=mt"  # Теплофак.
-                        if t[0].upper() == "С":
-                            URL = urlC
-                        elif t[0].upper() == "Р":
-                            URL = urlR
-                        else:
-                            URL = urlT
+                        URL = t[7]
                         response = {
                             'response': {
                                 'text': text,
