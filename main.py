@@ -53,8 +53,8 @@ def main():
             m = req["request"]["original_utterance"].lower()
             l = symbols_classroom(m)
             c = l[0]  # Корпус.
-            au = l[2] # Аудитория.
-            asymb = l[1] # Символ аудитории если есть.
+            au = l[-1] # Аудитория.
+            #asymb = l[1] # Символ аудитории если есть.
             try:
                 with sqlite3.connect("database.db") as db:
                     cursor = db.cursor()
