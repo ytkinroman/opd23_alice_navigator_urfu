@@ -46,6 +46,49 @@ def symbols_classroom(classroom):
 
 
 
+def get_message_p1():
+    r = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}."
+    return r
+
+def get_message_p2():
+    if t[5] == "цокольный":
+        text = f" Cпуститесь на {t[5]} этаж."
+        return text
+    elif t[5] == "первый":
+        return ""
+    else:
+        text = f" Поднимитесь по лестнице на {t[5]} этаж."
+        return text
+
+def get_message_p3():
+    if not t[4] is None:
+        text = f" Пройдите в {t[4]} крыло."
+        return text
+
+
+def get_message_p4():
+    if not t[8] is None:
+        return " " + t[8]
+    else:
+        return ""
+
+
+def get_message():
+    """
+    цкйцвцувц
+    :return: string
+    """
+    return get_message_p1() + get_message_p4() + get_message_p2() + get_message_p3()
+
+
+
+
+
+
+# def get_welcome():
+
+
+
 @app.route("/webhook", methods=["POST"])
 def main():
     req = request.json
@@ -66,7 +109,7 @@ def main():
             au = l[1] # Аудитория.
             #asymb = l[1] # Символ аудитории если есть.
             try:
-                with sqlite3.connect("database.db") as db:
+                with sqlite3.connect("db.db") as db:
                     cursor = db.cursor()
                     query = f""" SELECT * FROM test WHERE c = '{c}' AND au = '{au}' """
                     cursor.execute(query)
@@ -75,50 +118,11 @@ def main():
                         text = text = "Аудитория не найдена..."
                         response["response"]["text"] = text
                     else:
-                        t = res
-                        action = ""
-                        if t[4] is None:
-                            if t[8] is None:
-                                if t[5] == "цокольный":
-                                    action = "спуститься"
-                                    text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно {action} на {t[5]} этаж."
-                                elif t[5] == "первый":
-                                    text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}."
-                                else:
-                                    action = "подняться"
-                                    text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно {action} на {t[5]} этаж."
-                            else:
-                                if t[5] == "цокольный":
-                                    action = "спуститься"
-                                    text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно {action} на {t[5]} этаж. {t[8]}"
-                                elif t[5] == "первый":
-                                    text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. {t[8]}"
-                                else:
-                                    action = "подняться"
-                                    text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно {action} на {t[5]} этаж. {t[8]}"
-                        else:
-                            if t[8] is None:
-                                if t[5] == "цокольный":
-                                    action = "спуститься"
-                                    text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно {action} на {t[5]} этаж и пройти в {t[4]} крыло."
-                                elif t[5] == "первый":
-                                    text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно пройти в {t[4]} крыло."
-                                else:
-                                    action = "подняться"
-                                    text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно {action} на {t[5]} этаж и пройти в {t[4]} крыло."
-                            else:
-                                if t[5] == "цокольный":
-                                    action = "спуститься"
-                                    text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно {action} на {t[5]} этаж и пройти в {t[4]} крыло. {t[8]}"
-                                elif t[5] == "первый":
-                                    text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно пройти в {t[4]} крыло. {t[8]}"
-                                else:
-                                    action = "подняться"
-                                    text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно {action} на {t[5]} этаж и пройти в {t[4]} крыло. {t[8]}"
+                        s = get_message()
                         URL = t[7]
                         response = {
                             'response': {
-                                'text': text,
+                                'text': s,
                                 'buttons': [
                                     {
                                         'title': 'Построить маршрут',
