@@ -46,11 +46,11 @@ def symbols_classroom(classroom):
 
 
 
-def get_message_p1():
+def get_message_p1(t):
     r = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}."
     return r
 
-def get_message_p2():
+def get_message_p2(t):
     if t[5] == "цокольный":
         r = f" Cпуститесь на {t[5]} этаж."
         return r
@@ -60,13 +60,13 @@ def get_message_p2():
         r = f" Поднимитесь по лестнице на {t[5]} этаж."
         return r
 
-def get_message_p3():
+def get_message_p3(t):
     if not t[4] is None:
         r = f" Пройдите в {t[4]} крыло."
         return r
 
 
-def get_message_p4():
+def get_message_p4(t):
     if not t[8] is None:
         return " " + t[8]
     else:
@@ -119,7 +119,7 @@ def main():
                         response["response"]["text"] = text
                     else:
                         t = res
-                        text = get_message()
+                        text = get_message(t)
                         URL = t[7]
                         response = {
                             'response': {
