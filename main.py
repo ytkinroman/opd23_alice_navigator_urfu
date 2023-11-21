@@ -10,28 +10,29 @@ app = Flask(__name__)
 def symbols_classroom(classroom):
     characters = []
     numbers = []
-
     current_character = ""
     count = 0
-
-    for char in classroom:
-        if char.isalpha():
-            if current_character.isdigit():
-                numbers.append(int(current_character))
+    for element in classroom:
+        if element.isalpha(): #проверяет, является ли текущий символ буквой
+            if current_character.isdigit(): #проверяет, является ли предыдущий символ числом
+                numbers.append(int(current_character))#добавляет предыдущий символ в список числовых символов, преобразуя его в целое число
                 current_character = ""
-            current_character += char
-        elif char.isdigit():
-            if current_character.isalpha():
-                characters.append(current_character)
+            current_character += element
+        elif element.isdigit(): #проверяет, является ли последний символ числом
+            if current_character.isalpha():  #проверяет, является ли предыдущий символ буквой
+                characters.append(current_character)#добавляет последний символ в список буквенных символов
                 current_character = ""
-            current_character += char
-        if char.isalpha():
+            current_character += element
+        # Увеличиваем счетчик только для буквенных символов
+        if element.isalpha():
             count += 1
+    #Проверка последнего элемента, если он есть, то добавляем к текущей строке
     if current_character:
         if current_character.isdigit():
             numbers.append(int(current_character))
         else:
             characters.append(current_character)
+    #Проверка на вид строки
     if len(characters) == 2:
         result = list(characters + numbers)
         result[2], result[1] = result[1], result[2]
@@ -108,12 +109,12 @@ def main():
                             else:
                                 if t[5] == "цокольный":
                                     action = "спуститься"
-                                    text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно {action} на {t[5]} этаж и пройти в {t[4]} крыло. {t[8]}!!!!"
+                                    text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно {action} на {t[5]} этаж и пройти в {t[4]} крыло. {t[8]}"
                                 elif t[5] == "первый":
-                                    text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно пройти в {t[4]} крыло. {t[8]}!!!!!"
+                                    text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно пройти в {t[4]} крыло. {t[8]"
                                 else:
                                     action = "подняться"
-                                    text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно {action} на {t[5]} этаж и пройти в {t[4]} крыло. {t[8]}!!!!!"
+                                    text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно {action} на {t[5]} этаж и пройти в {t[4]} крыло. {t[8]}"
                         URL = t[7]
                         response = {
                             'response': {
