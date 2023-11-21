@@ -52,18 +52,18 @@ def get_message_p1():
 
 def get_message_p2():
     if t[5] == "цокольный":
-        o = f" Cпуститесь на {t[5]} этаж."
-        return o
+        r = f" Cпуститесь на {t[5]} этаж."
+        return r
     elif t[5] == "первый":
         return ""
     else:
-        o = f" Поднимитесь по лестнице на {t[5]} этаж."
-        return o
+        r = f" Поднимитесь по лестнице на {t[5]} этаж."
+        return r
 
 def get_message_p3():
     if not t[4] is None:
-        o = f" Пройдите в {t[4]} крыло."
-        return o
+        r = f" Пройдите в {t[4]} крыло."
+        return r
 
 
 def get_message_p4():
@@ -115,15 +115,15 @@ def main():
                     cursor.execute(query)
                     res = cursor.fetchone()  # Картеж с данными из базы данных.
                     if res == None:
-                        text = "Аудитория не найдена..."
+                        text = text = "Аудитория не найдена..."
                         response["response"]["text"] = text
                     else:
                         t = res
-                        s = get_message()
+                        text = get_message()
                         URL = t[7]
                         response = {
                             'response': {
-                                'text': s,
+                                'text': text,
                                 'buttons': [
                                     {
                                         'title': 'Построить маршрут',
