@@ -12,11 +12,12 @@ def symbols_classroom(classroom):
     numbers = []
 
     current_character = ""
+    count = 0
 
     for char in classroom:
         if char.isalpha():
             if current_character.isdigit():
-                numbers.append(current_character)
+                numbers.append(int(current_character))
                 current_character = ""
             current_character += char
         elif char.isdigit():
@@ -24,15 +25,20 @@ def symbols_classroom(classroom):
                 characters.append(current_character)
                 current_character = ""
             current_character += char
-
-    # Проверка, чтобы добавить последний элемент, если он есть
+        if char.isalpha():
+            count += 1
     if current_character:
         if current_character.isdigit():
-            numbers.append(current_character)
+            numbers.append(int(current_character))
         else:
             characters.append(current_character)
-
-    result = characters + numbers
+    if len(characters) == 2:
+        result = list(characters + numbers)
+        result[2], result[1] = result[1], result[2]
+    elif len(characters) == len(numbers) == 3:
+        result = list(characters + numbers + characters)
+    else:
+        result = list(characters + numbers)
     return result
 
 
@@ -53,7 +59,7 @@ def main():
             m = req["request"]["original_utterance"].lower()
             l = symbols_classroom(m)
             c = l[0]  # Корпус.
-            au = l[-1] # Аудитория.
+            au = l[1] # Аудитория.
             #asymb = l[1] # Символ аудитории если есть.
             try:
                 with sqlite3.connect("database.db") as db:
@@ -87,14 +93,24 @@ def main():
                                     action = "подняться"
                                     text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно {action} на {t[5]} этаж. {t[8]}"
                         else:
-                            if t[5] == "цокольный":
-                                action = "спуститься"
-                                text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно {action} на {t[5]} этаж и пройти в {t[4]} крыло."
-                            elif t[5] == "первый":
-                                text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно пройти в {t[4]} крыло."
+                            if t[8] is None:
+                                if t[5] == "цокольный":
+                                    action = "спуститься"
+                                    text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно {action} на {t[5]} этаж и пройти в {t[4]} крыло."
+                                elif t[5] == "первый":
+                                    text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно пройти в {t[4]} крыло."
+                                else:
+                                    action = "подняться"
+                                    text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно {action} на {t[5]} этаж и пройти в {t[4]} крыло."
                             else:
-                                action = "подняться"
-                                text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно {action} на {t[5]} этаж и пройти в {t[4]} крыло."
+                                if t[5] == "цокольный":
+                                    action = "спуститься"
+                                    text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно {action} на {t[5]} этаж и пройти в {t[4]} крыло. {t[8]}"
+                                elif t[5] == "первый":
+                                    text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно пройти в {t[4]} крыло. {t[8]}"
+                                else:
+                                    action = "подняться"
+                                    text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно {action} на {t[5]} этаж и пройти в {t[4]} крыло. {t[8]}"
                         URL = t[7]
                         response = {
                             'response': {
