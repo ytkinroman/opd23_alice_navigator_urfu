@@ -42,6 +42,9 @@ def symbols_classroom(classroom):
     return result
 
 
+
+
+
 @app.route("/webhook", methods=["POST"])
 def main():
     req = request.json
@@ -105,12 +108,12 @@ def main():
                             else:
                                 if t[5] == "цокольный":
                                     action = "спуститься"
-                                    text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно {action} на {t[5]} этаж и пройти в {t[4]} крыло. {t[8]}"
+                                    text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно {action} на {t[5]} этаж и пройти в {t[4]} крыло. {t[8]}!!!!"
                                 elif t[5] == "первый":
-                                    text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно пройти в {t[4]} крыло. {t[8]}"
+                                    text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно пройти в {t[4]} крыло. {t[8]}!!!!!"
                                 else:
                                     action = "подняться"
-                                    text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно {action} на {t[5]} этаж и пройти в {t[4]} крыло. {t[8]}"
+                                    text = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}. Вам нужно {action} на {t[5]} этаж и пройти в {t[4]} крыло. {t[8]}!!!!!"
                         URL = t[7]
                         response = {
                             'response': {
@@ -127,7 +130,6 @@ def main():
                             "version": request.json["version"],
                             "session": request.json["session"],
                         }
-                        
             except TypeError:
                 text = "Что-то не так..."
                 response["response"]["text"] = text
