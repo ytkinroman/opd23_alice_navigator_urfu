@@ -83,13 +83,7 @@ def get_message(t):
 
 
 
-
-
-# def get_welcome():
-
-
-
-@app.route("/webhook", methods=["POST"])
+@app.route("/alice-webhook", methods=["POST"])
 def main():
     req = request.json
     response = {
@@ -137,7 +131,7 @@ def main():
                             "session": request.json["session"],
                         }
             except TypeError:
-                text = "Что-то не так..."
+                text = "Что-то пошло не так..."
                 response["response"]["text"] = text
     return json.dumps(response)
 
