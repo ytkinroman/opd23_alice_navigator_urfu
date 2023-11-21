@@ -118,11 +118,12 @@ def main():
                         text = text = "Аудитория не найдена..."
                         response["response"]["text"] = text
                     else:
-                        s = get_message()
+                        t = res
+                        text = get_message()
                         URL = t[7]
                         response = {
                             'response': {
-                                'text': s,
+                                'text': text,
                                 'buttons': [
                                     {
                                         'title': 'Построить маршрут',
