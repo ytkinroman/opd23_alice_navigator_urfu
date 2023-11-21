@@ -73,12 +73,12 @@ def get_message_p4(t):
         return ""
 
 
-def get_message():
+def get_message(t):
     """
     цкйцвцувц
     :return: string
     """
-    return get_message_p1() + get_message_p4() + get_message_p2() + get_message_p3()
+    return get_message_p1(t) + get_message_p4(t) + get_message_p2(t) + get_message_p3(t)
 
 
 
