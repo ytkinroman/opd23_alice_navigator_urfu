@@ -83,7 +83,7 @@ def get_message(t):
 
 
 
-@app.route("/alice-webhook", methods=["POST"])
+@app.route("/alice", methods=["POST"])
 def main():
     req = request.json
     response = {
