@@ -97,7 +97,8 @@ def main():
         response["response"]["text"] = "Я помогу найти тебе аудиторию. Какую аудиторию ты ищешь?"
     else:
         if req["request"]["original_utterance"]:
-            m = req["request"]["original_utterance"].lower()
+            m = req["request"]["original_utterance"]
+            m = m.lower()
             l = symbols_classroom(m)
             c = l[0]  # Корпус.
             au = l[1] # Аудитория.
