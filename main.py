@@ -1,10 +1,8 @@
 import json
 import sqlite3
-from flask import Flask, request 
-
+from flask import Flask, request
 
 app = Flask(__name__)
-
 
 
 def symbols_classroom(classroom):
@@ -13,26 +11,27 @@ def symbols_classroom(classroom):
     current_character = ""
     count = 0
     for element in classroom:
-        if element.isalpha(): #проверяет, является ли текущий символ буквой
-            if current_character.isdigit(): #проверяет, является ли предыдущий символ числом
-                numbers.append(int(current_character))#добавляет предыдущий символ в список числовых символов, преобразуя его в целое число
+        if element.isalpha():  # проверяет, является ли текущий символ буквой
+            if current_character.isdigit():  # проверяет, является ли предыдущий символ числом
+                numbers.append(
+                    int(current_character))  # добавляет предыдущий символ в список числовых символов, преобразуя его в целое число
                 current_character = ""
             current_character += element
-        elif element.isdigit(): #проверяет, является ли последний символ числом
-            if current_character.isalpha():  #проверяет, является ли предыдущий символ буквой
-                characters.append(current_character)#добавляет последний символ в список буквенных символов
+        elif element.isdigit():  # проверяет, является ли последний символ числом
+            if current_character.isalpha():  # проверяет, является ли предыдущий символ буквой
+                characters.append(current_character)  # добавляет последний символ в список буквенных символов
                 current_character = ""
             current_character += element
         # Увеличиваем счетчик только для буквенных символов
         if element.isalpha():
             count += 1
-    #Проверка последнего элемента, если он есть, то добавляем к текущей строке
+    # Проверка последнего элемента, если он есть, то добавляем к текущей строке
     if current_character:
         if current_character.isdigit():
             numbers.append(int(current_character))
         else:
             characters.append(current_character)
-    #Проверка на вид строки
+    # Проверка на вид строки
     if len(characters) == 2:
         result = list(characters + numbers)
         result[2], result[1] = result[1], result[2]
@@ -47,6 +46,7 @@ def get_message_p1(t):
     r = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}."
     return r
 
+
 def get_message_p2(t):
     if t[5] == "цокольный":
         r = f" Cпуститесь на {t[5]} этаж."
@@ -56,6 +56,7 @@ def get_message_p2(t):
     else:
         r = f" Поднимитесь по лестнице на {t[5]} этаж."
         return r
+
 
 def get_message_p3(t):
     if not t[4] is None:
@@ -93,18 +94,17 @@ def main():
     else:
         if req["request"]["original_utterance"]:
             m = req["request"]["original_utterance"]
-            m = m.lower()
             l = symbols_classroom(m)
-            c = l[0]  # Корпус.
-            au = l[1] # Аудитория.
-            #asymb = l[1] # Символ аудитории если есть.
+            c = l[0].lower()  # Корпус.
+            au = l[1]  # Аудитория.
+            # asymb = l[1] # Символ аудитории если есть.
             try:
                 with sqlite3.connect("db.db") as db:
                     cursor = db.cursor()
                     query = f""" SELECT * FROM test WHERE c = '{c}' AND au = '{au}' """
                     cursor.execute(query)
                     res = cursor.fetchone()  # Картеж с данными из базы данных.
-                    if res == None:
+                    if res is None:
                         text = text = "Аудитория не найдена..."
                         response["response"]["text"] = text
                     else:
