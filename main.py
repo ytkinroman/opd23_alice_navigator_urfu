@@ -113,7 +113,6 @@ def main():
                         t = res
                         text = get_message(t)
                         URL = t[7]
-                        pict = "img1.jpg"
                         response = {
                             'response': {
                                 'text': text,
@@ -124,10 +123,6 @@ def main():
                                         'url': URL
                                     }
                                 ],
-                                'card': {
-                                    "type": "BigImage",
-                                    "image_id": pict
-                                },
                                 'end_session': False
                             },
                             "version": request.json["version"],
