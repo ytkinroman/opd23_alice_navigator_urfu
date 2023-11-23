@@ -62,6 +62,8 @@ def get_message_p3(t):
     if not t[4] is None:
         r = f" Пройдите в {t[4]} крыло."
         return r
+    else:
+        return ""
 
 
 def get_message_p4(t):
