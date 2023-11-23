@@ -43,9 +43,6 @@ def symbols_classroom(classroom):
     return result
 
 
-
-
-
 def get_message_p1(t):
     r = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}."
     return r
@@ -81,8 +78,6 @@ def get_message(t):
     return get_message_p1(t) + get_message_p4(t) + get_message_p2(t) + get_message_p3(t)
 
 
-
-
 @app.route("/alice-webhook", methods=["POST"])
 def main():
     req = request.json
@@ -101,7 +96,7 @@ def main():
             m = m.lower()
             l = symbols_classroom(m)
             c = l[0]  # Корпус.
-            au = std(l[1]) # Аудитория.
+            au = l[1] # Аудитория.
             #asymb = l[1] # Символ аудитории если есть.
             try:
                 with sqlite3.connect("db.db") as db:
