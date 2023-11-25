@@ -118,11 +118,16 @@ def main():
                         response = {
                             'response': {
                                 'text': text,
-                                'buttons':
-                                {
-                                    'title': 'Построить маршрут',
-                                    'payload': {},
-                                    'url': URL
+                                "card": {
+                                    "type": "BigImage",
+                                    "image_id": img001[0],
+                                    "title": img001[1],
+                                    "description": "Описание изображения.",
+                                    "button": {
+                                        "text": "Надпись на кнопке",
+                                        "url": URL,
+                                        "payload": {}
+                                    }
                                 },
                                 'end_session': False
                             },
