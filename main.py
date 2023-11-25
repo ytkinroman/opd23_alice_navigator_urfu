@@ -114,16 +114,23 @@ def main():
                         t = res
                         text = get_message(t)
                         URL = t[7]
+                        img001 = ["997614/8ff2a16ed346c7665978", "Тест пикча"]
+                        ['respose']['card'] = { "type": "BigImage", "image_id": img, "title": title }
                         response = {
                             'response': {
                                 'text': text,
-                                'buttons': [
+                                "сard": {
+                                    "type": "BigImage",
+                                    "image_id": img001[0],
+                                    "title": img001[1],
+                                }
+                                'buttons':
                                     {
                                         'title': 'Построить маршрут',
                                         'payload': {},
                                         'url': URL
                                     }
-                                ],
+                                ,
                                 'end_session': False
                             },
                             "version": request.json["version"],
