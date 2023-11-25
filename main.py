@@ -115,7 +115,6 @@ def main():
                         text = get_message(t)
                         URL = t[7]
                         img001 = ["997614/8ff2a16ed346c7665978", "Тест пикча"]
-                        ['respose']['card'] = { "type": "BigImage", "image_id": img, "title": title }
                         response = {
                             'response': {
                                 'text': text,
