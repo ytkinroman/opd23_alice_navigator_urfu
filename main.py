@@ -123,7 +123,7 @@ def main():
                                     "type": "BigImage",
                                     "image_id": img001[0],
                                     "title": img001[1],
-                                }
+                                },
                                 'buttons':
                                     {
                                         'title': 'Построить маршрут',
