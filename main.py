@@ -122,9 +122,9 @@ def main():
                                     "type": "BigImage",
                                     "image_id": img001[0],
                                     "title": img001[1],
-                                    "description": "Описание изображения.",
+                                    "description": text,
                                     "button": {
-                                        "text": "Надпись на кнопке",
+                                        "text": "Построить маршрут",
                                         "url": URL,
                                         "payload": {}
                                     }
