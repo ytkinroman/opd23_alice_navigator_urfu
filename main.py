@@ -122,14 +122,12 @@ def main():
                                     "type": "BigImage",
                                     "image_id": img001[0],
                                     "title": img001[1],
-                                },
-                                'buttons':
-                                    {
+                                    "description": "Описание изображения.",
+                                    'buttons': {
                                         'title': 'Построить маршрут',
                                         'payload': {},
                                         'url': URL
-                                    }
-                                ,
+                                    },
                                 'end_session': False
                             },
                             "version": request.json["version"],
