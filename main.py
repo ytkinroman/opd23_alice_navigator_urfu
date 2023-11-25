@@ -115,19 +115,16 @@ def main():
                         text = get_message(t)
                         URL = t[7]
                         img001 = ["997614/8ff2a16ed346c7665978", "Тест пикча"]
+                        ['respose']['card'] = { "type": "BigImage", "image_id": img001[0], "title": img001[1] }
                         response = {
                             'response': {
                                 'text': text,
-                                "сard": {
-                                    "type": "BigImage",
-                                    "image_id": img001[0],
-                                    "title": img001[1],
-                                    "description": "Описание изображения.",
-                                    'buttons': {
-                                        'title': 'Построить маршрут',
-                                        'payload': {},
-                                        'url': URL
-                                    },
+                                'buttons':
+                                {
+                                    'title': 'Построить маршрут',
+                                    'payload': {},
+                                    'url': URL
+                                },
                                 'end_session': False
                             },
                             "version": request.json["version"],
