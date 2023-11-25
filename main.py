@@ -134,7 +134,6 @@ def main():
                             "version": request.json["version"],
                             "session": request.json["session"],
                         }
-                        ['respose']['card'] = { "type": "BigImage", "image_id": img001[0], "title": img001[1] }
             except TypeError:
                 text = "Что-то пошло не так..."
                 response["response"]["text"] = text
