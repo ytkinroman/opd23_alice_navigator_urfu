@@ -140,6 +140,9 @@ if __name__ == "__main__":
 
 
 """
+
+Ебаная карточка
+
                     else:
                         t = res
                         text = get_message(t)
