@@ -128,7 +128,7 @@ def main():
                                         'title': 'Построить маршрут',
                                         'payload': {},
                                         'url': URL,
-                                        'hide': true
+                                        'hide': "true"
                                     }
                                 ],
                                 'end_session': False
