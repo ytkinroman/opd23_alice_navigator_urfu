@@ -10,35 +10,41 @@ def symbols_classroom(classroom):
     numbers = []
     current_character = ""
     count = 0
+
     for element in classroom:
-        if element.isalpha():  # проверяет, является ли текущий символ буквой
-            if current_character.isdigit():  # проверяет, является ли предыдущий символ числом
-                numbers.append(
-                    int(current_character))  # добавляет предыдущий символ в список числовых символов, преобразуя его в целое число
+        if element.isalpha(): #проверяет, является ли текущий символ буквой
+            if current_character.isdigit(): #проверяет, является ли предыдущий символ числом
+                numbers.append(int(current_character))#добавляет предыдущий символ в список числовых символов, преобразуя его в целое число
                 current_character = ""
             current_character += element
-        elif element.isdigit():  # проверяет, является ли последний символ числом
-            if current_character.isalpha():  # проверяет, является ли предыдущий символ буквой
-                characters.append(current_character)  # добавляет последний символ в список буквенных символов
+        elif element.isdigit(): #проверяет, является ли последний символ числом
+            if current_character.isalpha():  #проверяет, является ли предыдущий символ буквой
+                characters.append(current_character)#добавляет последний символ в список буквенных символов
                 current_character = ""
             current_character += element
+
         # Увеличиваем счетчик только для буквенных символов
         if element.isalpha():
             count += 1
-    # Проверка последнего элемента, если он есть, то добавляем к текущей строке
+
+    #Проверка последнего элемента, если он есть, то добавляем к текущей строке
     if current_character:
         if current_character.isdigit():
             numbers.append(int(current_character))
         else:
             characters.append(current_character)
-    # Проверка на вид строки
+
+    #Проверка на вид строки
     if len(characters) == 2:
         result = list(characters + numbers)
         result[2], result[1] = result[1], result[2]
+        result[2] = result[2].lower()
     elif len(characters) == len(numbers) == 3:
         result = list(characters + numbers + characters)
+        result[2] = result[2].lower()
     else:
         result = list(characters + numbers)
+    result[0] = result[0].lower()
     return result
 
 
@@ -121,7 +127,8 @@ def main():
                                     {
                                         'title': 'Построить маршрут',
                                         'payload': {},
-                                        'url': URL
+                                        'url': URL,
+                                        'hide': true
                                     }
                                 ],
                                 'end_session': False
