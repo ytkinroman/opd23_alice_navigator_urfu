@@ -111,6 +111,15 @@ def get_message(t):
 ######################################################################################################
 
 
+
+
+
+
+
+
+
+
+
 @app.route("/alice-webhook", methods=["POST"])
 def main():
     req = request.json # Делаем запрос.
@@ -122,44 +131,47 @@ def main():
         }
     }
     if req["session"]["new"]: # Приветствие.
-        response["response"]["text"] = "Я помогу найти тебе аудиторию. Какую аудиторию ты ищешь?"
+        response["response"]["text"] = "Привет! Я навык, который поможет тебе найти аудиторию в УрФУ. Просто скажи, какую аудиторию тебе нужно найти (Например Р-125, Т-1010, С-227)."
     else:
-        if req["request"]["original_utterance"]:
-            m = ' '.join(req["request"]["nlu"]["tokens"])
-            l = symbols_classroom(m)
-            c = l[0].lower()  # Корпус.
-            au = str(l[1])  # Аудитория.
+        if req["request"]["command"] == "что ты умеешь":
+            response["response"]["text"] = "Я умею подсказывать удобный путь для нахождения нужной аудитории в УрФУ и прокладывать маршрут до корпуса в котором находится нужная аудитория."
+        else:
+            if req["request"]["original_utterance"]:
+                m = ' '.join(req["request"]["nlu"]["tokens"])
+                l = symbols_classroom(m)
+                c = l[0].lower()  # Корпус.
+                au = str(l[1])  # Аудитория.
 
-            if len(l) > 2 and l[2] in l:
-                a2 = l[2] # буква кабинета
-                au + a2
+                if len(l) > 2 and l[2] in l:
+                    a2 = l[2] # буква кабинета
+                    au + a2
 
-            res = get_data_from_database(c, au)
+                res = get_data_from_database(c, au)
 
-            if res is None:
-                text = text = "Аудитория не найдена..."
-                response["response"]["text"] = text
-            else:
-                t = res
-                text = get_message(t)
-                URL = t[7]
-                response = {
-                    'response': {
-                        'text': text,
-                        'buttons':
-                        [
-                            {
-                                'title': 'Построить маршрут',
-                                'payload': {},
-                                'url': URL,
-                                'hide': "true"
-                            }
-                        ],
-                        'end_session': False
-                    },
-                    "version": request.json["version"],
-                    "session": request.json["session"],
-                }
+                if res is None:
+                    text = text = "Аудитория не найдена..."
+                    response["response"]["text"] = text
+                else:
+                    t = res
+                    text = get_message(t)
+                    URL = t[7]
+                    response = {
+                        'response': {
+                            'text': text,
+                            'buttons':
+                            [
+                                {
+                                    'title': 'Построить маршрут',
+                                    'payload': {},
+                                    'url': URL,
+                                    'hide': "true"
+                                }
+                            ],
+                            'end_session': False
+                        },
+                        "version": request.json["version"],
+                        "session": request.json["session"],
+                    }
     return json.dumps(response)
 
 
