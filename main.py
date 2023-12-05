@@ -128,7 +128,7 @@ def main():
             m = ' '.join(req["request"]["nlu"]["tokens"])
             l = symbols_classroom(m)
             c = l[0].lower()  # Корпус.
-            au = l[1]  # Аудитория.
+            str(au) = l[1]  # Аудитория.
 
             if len(l) > 2 and l[2] in l:
                 a2 = l[2] # буква кабинета
