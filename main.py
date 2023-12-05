@@ -1,8 +1,29 @@
+from flask import Flask, request
 import json
 import sqlite3
-from flask import Flask, request
 
 app = Flask(__name__)
+
+
+######################################################################################################
+
+
+def get_data_from_database(corpus, auditorium):
+    with sqlite3.connect("db.db") as db:
+        cursor = db.cursor()
+        query = f""" SELECT * FROM test WHERE c = '{corpus}' AND au = '{auditorium}' """
+        cursor.execute(query)
+        result = cursor.fetchone()  # Картеж строки из базы данных.
+
+        if result is None:
+            return None
+        else:
+            return result
+
+
+
+
+######################################################################################################
 
 
 def symbols_classroom(classroom):
@@ -48,6 +69,10 @@ def symbols_classroom(classroom):
     return result
 
 
+######################################################################################################
+
+
+
 def get_message_p1(t):
     r = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}."
     return r
@@ -80,98 +105,59 @@ def get_message_p4(t):
 
 
 def get_message(t):
-    """
-    цкйцвцувц
-    :return: string
-    """
     return get_message_p1(t) + get_message_p4(t) + get_message_p2(t) + get_message_p3(t)
+
+
+######################################################################################################
 
 
 @app.route("/alice-webhook", methods=["POST"])
 def main():
-    req = request.json
-    response = {
+    req = request.json # Делаем запрос.
+    response = { # Формируем ответ.
         "version": request.json["version"],
         "session": request.json["session"],
         "response": {
             "end_session": False
         }
     }
-    if req["session"]["new"]:
+    if req["session"]["new"]: # Приветствие.
         response["response"]["text"] = "Я помогу найти тебе аудиторию. Какую аудиторию ты ищешь?"
     else:
         if req["request"]["original_utterance"]:
-            #m = req["request"]["original_utterance"]
             m = ' '.join(req["request"]["nlu"]["tokens"])
             l = symbols_classroom(m)
             c = l[0].lower()  # Корпус.
             au = l[1]  # Аудитория.
             # asymb = l[1] # Символ аудитории если есть.
-            try:
-                with sqlite3.connect("db.db") as db:
-                    cursor = db.cursor()
-                    query = f""" SELECT * FROM test WHERE c = '{c}' AND au = '{au}' """
-                    cursor.execute(query)
-                    res = cursor.fetchone()  # Картеж с данными из базы данных.
-                    if res is None:
-                        text = text = "Аудитория не найдена..."
-                        response["response"]["text"] = text
-                    else:
-                        t = res
-                        text = get_message(t)
-                        URL = t[7]
-                        response = {
-                            'response': {
-                                'text': text,
-                                'buttons': [
-                                    {
-                                        'title': 'Построить маршрут',
-                                        'payload': {},
-                                        'url': URL,
-                                        'hide': "true"
-                                    }
-                                ],
-                                'end_session': False
-                            },
-                            "version": request.json["version"],
-                            "session": request.json["session"],
-                        }
-            except TypeError:
-                text = "Что-то пошло не так..."
+            res = get_data_from_database(c, au)
+
+            if res is None:
+                text = text = "Аудитория не найдена..."
                 response["response"]["text"] = text
+            else:
+                t = res
+                text = get_message(t)
+                URL = t[7]
+                response = {
+                    'response': {
+                        'text': text,
+                        'buttons':
+                        [
+                            {
+                                'title': 'Построить маршрут',
+                                'payload': {},
+                                'url': URL,
+                                'hide': "true"
+                            }
+                        ],
+                        'end_session': False
+                    },
+                    "version": request.json["version"],
+                    "session": request.json["session"],
+                }
     return json.dumps(response)
 
 
 if __name__ == "__main__":
     app.run()
-
-
-"""
-
-Ебаная карточка
-
-                    else:
-                        t = res
-                        text = get_message(t)
-                        URL = t[7]
-                        response = {
-                            'response': {
-                                'text': text,
-                                "card": {
-                                    "type": "BigImage",
-                                    "image_id": 997614/8ff2a16ed346c7665978,
-                                    "title": t[1],
-                                    "description": text,
-                                    "button": {
-                                        "text": "Построить маршрут",
-                                        "url": URL,
-                                        "payload": {}
-                                    }
-                                },
-                                'end_session': False
-                            },
-                            "version": request.json["version"],
-                            "session": request.json["session"],
-                        }
-            except TypeError:
-"""
