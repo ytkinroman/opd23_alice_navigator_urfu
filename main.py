@@ -5,9 +5,6 @@ import sqlite3
 app = Flask(__name__)
 
 
-######################################################################################################
-
-
 def get_data_from_database(corpus, auditorium):
     with sqlite3.connect("db.db") as db:
         cursor = db.cursor()
@@ -21,11 +18,6 @@ def get_data_from_database(corpus, auditorium):
             return result
 
 
-
-
-######################################################################################################
-
-
 def symbols_classroom(classroom):
     characters = []
     numbers = []
@@ -33,14 +25,15 @@ def symbols_classroom(classroom):
     count = 0
 
     for element in classroom:
-        if element.isalpha(): #проверяет, является ли текущий символ буквой
-            if current_character.isdigit(): #проверяет, является ли предыдущий символ числом
-                numbers.append(int(current_character))#добавляет предыдущий символ в список числовых символов, преобразуя его в целое число
+        if element.isalpha():  # проверяет, является ли текущий символ буквой
+            if current_character.isdigit():  # проверяет, является ли предыдущий символ числом
+                numbers.append(
+                    int(current_character))  # добавляет предыдущий символ в список числовых символов, преобразуя его в целое число
                 current_character = ""
             current_character += element
-        elif element.isdigit(): #проверяет, является ли последний символ числом
-            if current_character.isalpha():  #проверяет, является ли предыдущий символ буквой
-                characters.append(current_character)#добавляет последний символ в список буквенных символов
+        elif element.isdigit():  # проверяет, является ли последний символ числом
+            if current_character.isalpha():  # проверяет, является ли предыдущий символ буквой
+                characters.append(current_character)  # добавляет последний символ в список буквенных символов
                 current_character = ""
             current_character += element
 
@@ -48,14 +41,14 @@ def symbols_classroom(classroom):
         if element.isalpha():
             count += 1
 
-    #Проверка последнего элемента, если он есть, то добавляем к текущей строке
+    # Проверка последнего элемента, если он есть, то добавляем к текущей строке
     if current_character:
         if current_character.isdigit():
             numbers.append(int(current_character))
         else:
             characters.append(current_character)
 
-    #Проверка на вид строки
+    # Проверка на вид строки
     if len(characters) == 2:
         result = list(characters + numbers)
         result[2], result[1] = result[1], result[2]
@@ -67,10 +60,6 @@ def symbols_classroom(classroom):
         result = list(characters + numbers)
     result[0] = result[0].lower()
     return result
-
-
-######################################################################################################
-
 
 
 def get_message_p1(t):
@@ -111,67 +100,55 @@ def get_message(t):
 ######################################################################################################
 
 
-
-
-
-
-
-
-
-
-
 @app.route("/alice-webhook", methods=["POST"])
 def main():
-    req = request.json # Делаем запрос.
-    response = { # Формируем ответ.
+    req = request.json  # Делаем запрос.
+    response = {  # Формируем ответ.
         "version": request.json["version"],
         "session": request.json["session"],
         "response": {
             "end_session": False
         }
     }
-    if req["session"]["new"]: # Приветствие.
-        response["response"]["text"] = "Привет! Я навык, который поможет тебе найти аудиторию в УрФУ. Просто скажи, какую аудиторию тебе нужно найти (Например Р-125, Т-1010, С-227)."
+    if req["session"]["new"]:  # Приветствие.
+        response["response"][
+            "text"] = "Привет! Я навык, который поможет тебе найти аудиторию в УрФУ. Просто скажи, какую аудиторию тебе нужно найти (Например Р-125, Т-1010, С-227)."
     else:
-        if req["request"]["command"] == "что ты умеешь":
-            response["response"]["text"] = "Я умею подсказывать удобный путь для нахождения нужной аудитории в УрФУ и прокладывать маршрут до корпуса в котором находится нужная аудитория."
-        else:
-            if req["request"]["original_utterance"]:
-                m = ' '.join(req["request"]["nlu"]["tokens"])
-                l = symbols_classroom(m)
-                c = l[0].lower()  # Корпус.
-                au = str(l[1])  # Аудитория.
+        if req["request"]["original_utterance"]:
+            m = ' '.join(req["request"]["nlu"]["tokens"])
+            l = symbols_classroom(m)
+            c = l[0].lower()  # Корпус.
+            au = str(l[1])  # Аудитория.
 
-                if len(l) > 2 and l[2] in l:
-                    a2 = l[2] # буква кабинета
-                    au + a2
+            if len(l) > 2 and l[2] in l:
+                a2 = l[2]  # буква кабинета
+                au + a2
 
-                res = get_data_from_database(c, au)
+            res = get_data_from_database(c, au)
 
-                if res is None:
-                    text = text = "Аудитория не найдена..."
-                    response["response"]["text"] = text
-                else:
-                    t = res
-                    text = get_message(t)
-                    URL = t[7]
-                    response = {
-                        'response': {
-                            'text': text,
-                            'buttons':
-                            [
-                                {
-                                    'title': 'Построить маршрут',
-                                    'payload': {},
-                                    'url': URL,
-                                    'hide': "true"
-                                }
-                            ],
-                            'end_session': False
-                        },
-                        "version": request.json["version"],
-                        "session": request.json["session"],
-                    }
+            if res is None:
+                text = text = "Аудитория не найдена..."
+                response["response"]["text"] = text
+            else:
+                t = res
+                text = get_message(t)
+                URL = t[7]
+                response = {
+                    'response': {
+                        'text': text,
+                        'buttons': [
+                            {
+                                'title': 'Построить маршрут',
+                                'payload': {},
+                                'url': URL,
+                                'hide': "true"
+                            }
+                        ],
+                        'end_session': False
+                    },
+                    'version': request.json["version"],
+                    'session': request.json["session"],
+                }
     return json.dumps(response)
 
 
