@@ -102,8 +102,8 @@ def get_message(t):
 
 @app.route("/alice-webhook", methods=["POST"])
 def main():
-    req = request.json  # Делаем запрос.
-    response = {  # Формируем ответ.
+    req = request.json  # получаем запрос
+    response = {  # Формируем базовый ответ.
         "version": request.json["version"],
         "session": request.json["session"],
         "response": {
@@ -111,10 +111,11 @@ def main():
         }
     }
     if req["session"]["new"]:  # Приветствие.
-        response["response"]["text"] = "Привет! Я помогу найти тебе аудиторию. Какую аудиторию ты ищешь? (Например И-125, Т-1010)."
+        response["response"]["text"] = "Привет! Я помогу найти тебе аудиторию. Какую аудиторию ты ищешь? (Примечание: Скажите только название аудитории, например И-125, Т-1010)."
     else:
         if req["request"]["original_utterance"]:
-            m = ' '.join(req["request"]["nlu"]["tokens"])
+
+            m = ' '.join(req["request"]["nlu"]["tokens"])  # Р-0123      Р 23 Б     С,01      т1010 --> [Р,-,0123]
             l = symbols_classroom(m)
             c = l[0].lower()  # Корпус.
             au = str(l[1])  # Аудитория.
@@ -123,10 +124,11 @@ def main():
                 a2 = l[2]  # буква кабинета
                 au + a2
 
+
             res = get_data_from_database(c, au)
 
             if res is None:
-                text = text = "Аудитория не найдена..."
+                text = "Аудитория не найдена..."
                 response["response"]["text"] = text
             else:
                 t = res
