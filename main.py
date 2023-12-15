@@ -101,6 +101,9 @@ def save_metric(req):
     user_request = req["request"]["original_utterance"]
     with open("metric.txt", "a") as metric_file:
         metric_file.write(user_request + "\n")
+        print(user_request)
+        print(user_request, flush=True)
+
 
 
 @app.route("/alice-webhook", methods=["POST"])
