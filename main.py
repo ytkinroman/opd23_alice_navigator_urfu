@@ -103,9 +103,6 @@ def save_metric(req):
         metric_file.write(user_request + "\n")
 
 
-######################################################################################################
-
-
 @app.route("/alice-webhook", methods=["POST"])
 def main():
     req = request.json  # получаем запрос
