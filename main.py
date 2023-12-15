@@ -72,7 +72,7 @@ def get_message_p2(t):
         r = f" Cпуститесь на {t[5]} этаж."
         return r
     elif t[5] == "первый":
-        return ""
+        return " Первый этаж."
     else:
         r = f" Поднимитесь по лестнице на {t[5]} этаж."
         return r
@@ -83,7 +83,7 @@ def get_message_p3(t):
         r = f" Пройдите в {t[4]} крыло."
         return r
     else:
-        return ""
+        return " Аудитория находится в центральной части."
 
 
 def get_message_p4(t):
