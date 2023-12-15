@@ -116,7 +116,6 @@ def main():
             "end_session": False
         }
     }
-    save_metric(req)
     if req["session"]["new"]:  # Приветствие.
         response["response"]["text"] = "Привет! Я помогу найти тебе аудиторию. Какую аудиторию ты ищешь? (Примечание: Скажите только название аудитории, например И-125, Т-1010)."
     else:
@@ -131,7 +130,7 @@ def main():
                 a2 = l[2]  # буква кабинета
                 au + a2
 
-
+            save_metric(req)
             res = get_data_from_database(c, au)
 
             if res is None:
