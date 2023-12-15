@@ -76,6 +76,8 @@ def get_message_p2(t):
     elif t[5] is not None:
         r = f" Поднимитесь по лестнице на {t[5]} этаж."
         return r
+    elif t[5] is None:
+        return ""
     else:
         return ""
 
