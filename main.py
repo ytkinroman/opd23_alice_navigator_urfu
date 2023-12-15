@@ -97,6 +97,12 @@ def get_message(t):
     return get_message_p1(t) + get_message_p4(t) + get_message_p2(t) + get_message_p3(t)
 
 
+def save_metric(req):
+    user_request = req["request"]["original_utterance"]
+    with open("metric.txt", "a") as metric_file:
+        metric_file.write(user_request + "\n")
+
+
 ######################################################################################################
 
 
@@ -110,6 +116,7 @@ def main():
             "end_session": False
         }
     }
+    save_metric(req)
     if req["session"]["new"]:  # Приветствие.
         response["response"]["text"] = "Привет! Я помогу найти тебе аудиторию. Какую аудиторию ты ищешь? (Примечание: Скажите только название аудитории, например И-125, Т-1010)."
     else:
