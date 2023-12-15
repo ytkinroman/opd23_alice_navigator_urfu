@@ -130,9 +130,10 @@ def main():
             if len(l) > 2 and l[2] in l:
                 a2 = l[2]  # буква кабинета
                 au + a2
+                print(au)
 
             save_metric(req) # Сохраняем запросс пользователя.
-            res = get_data_from_database(c, au)
+            res = get_data_from_database(c, au.upper())
 
             if res is None:
                 text = "Аудитория не найдена..."
