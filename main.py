@@ -73,9 +73,11 @@ def get_message_p2(t):
         return r
     elif t[5] == "первый":
         return " Первый этаж."
-    else:
+    elif t[5] is not None:
         r = f" Поднимитесь по лестнице на {t[5]} этаж."
         return r
+    else:
+        return ""
 
 
 def get_message_p3(t):
