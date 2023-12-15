@@ -97,11 +97,12 @@ def get_message(t):
     return get_message_p1(t) + get_message_p4(t) + get_message_p2(t) + get_message_p3(t)
 
 
+# Не работает из-за Railway(
 def save_metric(req):
     user_request = req["request"]["original_utterance"]
     with open("metric.txt", "a") as metric_file:
         metric_file.write(user_request + "\n")
-        print(user_request)
+        #print(user_request)
         print(user_request, flush=True)
 
 
@@ -130,7 +131,7 @@ def main():
                 a2 = l[2]  # буква кабинета
                 au + a2
 
-            save_metric(req)
+            save_metric(req) # Сохраняем запросс пользователя.
             res = get_data_from_database(c, au)
 
             if res is None:
@@ -139,7 +140,7 @@ def main():
             else:
                 t = res
                 text = get_message(t)
-                URL = t[7]
+                rout_url = t[7]
                 response = {
                     'response': {
                         'text': text,
@@ -147,7 +148,7 @@ def main():
                             {
                                 'title': 'Построить маршрут',
                                 'payload': {},
-                                'url': URL,
+                                'url': rout_url,
                                 'hide': "true"
                             }
                         ],
