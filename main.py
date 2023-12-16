@@ -101,7 +101,7 @@ def get_message(t):
     """
     Текст.
     """
-    return get_message_p1(t) + get_message_p3(t) + get_message_p2(t) + get_message_p4(t)
+    return get_message_p1(t) + get_message_p3(t) + get_message_p4(t) + get_message_p2(t)
 
 
 # Не работает из-за Railway(
