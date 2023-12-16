@@ -98,7 +98,7 @@ def get_message_p4(t):
 
 
 def get_message(t):
-    return get_message_p1(t) + get_message_p4(t) + get_message_p3(t) + get_message_2(t)
+    return get_message_p1(t) + get_message_p4(t) + get_message_p3(t) + get_message_p2(t)
 
 
 # Не работает из-за Railway(
