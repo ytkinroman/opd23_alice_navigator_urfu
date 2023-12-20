@@ -4,6 +4,11 @@ import sqlite3
 
 app = Flask(__name__)
 
+"""
+    request — запрос, который поступил от Алисы.
+    response — ответ нашего сервера, который отправляется Алисе.
+"""
+
 
 def get_data_from_database(corpus, auditorium):
     with sqlite3.connect("db.db") as db:
@@ -18,7 +23,7 @@ def get_data_from_database(corpus, auditorium):
             return result
 
 
-def symbols_classroom(classroom):
+def symbols_classroom(classroom):  # "р432" --> ["р", 432]
     characters = []
     numbers = []
     current_character = ""
@@ -69,15 +74,13 @@ def get_message_p1(t):
 
 def get_message_p2(t):
     if t[5] == "цокольный":
-        r = f" Cпуститесь на {t[5]} этаж."
+        r = f" Cпуститесь на цокольный этаж."
         return r
     elif t[5] == "первый":
         return " Первый этаж."
     elif t[5] is not None:
         r = f" Поднимитесь по лестнице на {t[5]} этаж."
         return r
-    elif t[5] is None:
-        return ""
     else:
         return ""
 
@@ -113,7 +116,6 @@ def save_metric(req):
         print(user_request, flush=True)
 
 
-
 @app.route("/alice-webhook", methods=["POST"])
 def main():
     req = request.json  # получаем запрос
@@ -129,7 +131,7 @@ def main():
     else:
         if req["request"]["original_utterance"]:
 
-            m = ' '.join(req["request"]["nlu"]["tokens"])  # Р-0123      Р 23 Б     С,01      т1010 --> [Р,-,0123]
+            m = ' '.join(req["request"]["nlu"]["tokens"])  # Р-0123      Р 23 Б     С,01      т1010 --> [Р,123]
             l = symbols_classroom(m)
             c = l[0].lower()  # Корпус.
             au = str(l[1])  # Аудитория.
@@ -139,8 +141,8 @@ def main():
                 au + a2
                 print(au)
 
-            save_metric(req) # Сохраняем запросс пользователя.
-            res = get_data_from_database(c, au.upper())
+            #Save_metric(req) # Сохраняем запросс пользователя.
+            res = get_data_from_database(c, au)
 
             if res is None:
                 text = "Аудитория не найдена..."
@@ -165,6 +167,8 @@ def main():
                     'version': request.json["version"],
                     'session': request.json["session"],
                 }
+        else:
+            response["response"]["text"] = ""
     return json.dumps(response)
 
 
