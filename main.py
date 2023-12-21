@@ -136,38 +136,42 @@ def main():
 
             m = ' '.join(req["request"]["nlu"]["tokens"])  # Р-0123      Р 23 Б     С,01      Т-1010 --> [т,1010]
             l = symbols_classroom(m)
-            c = l[0].lower()  # Корпус.
-            au = str(l[1])  # Аудитория.
 
-            if len(l) > 2 and l[2] in l:
-                a2 = l[2]  # буква кабинета
-                print(au + a2)
-
-            res = get_data_from_database(c, au)
-
-            if res is None:
-                text = "Аудитория не найдена..."
-                response["response"]["text"] = text
+            if len(l) < 2: # Для того чтобы Алиса игнорировала случайные значения или запросы
+                response["response"]["text"] = "Пожалуйста, укажите название аудитории в формате, например, И-125 или Т-1010."
             else:
-                t = res
-                text = get_message(t)
-                rout_url = t[7]
-                response = {
-                    'response': {
-                        'text': text,
-                        'buttons': [
-                            {
-                                'title': 'Построить маршрут',
-                                'payload': {},
-                                'url': rout_url,
-                                'hide': "true"
-                            }
-                        ],
-                        'end_session': False
-                    },
-                    'version': request.json["version"],
-                    'session': request.json["session"],
-                }
+                c = l[0].lower()  # Корпус.
+                au = str(l[1])  # Аудитория.
+
+                if len(l) > 2 and l[2] in l:
+                    a2 = l[2]  # буква кабинета
+                    print(au + a2)
+
+                res = get_data_from_database(c, au)
+
+                if res is None:
+                    text = "Аудитория не найдена..."
+                    response["response"]["text"] = text
+                else:
+                    t = res
+                    text = get_message(t)
+                    rout_url = t[7]
+                    response = {
+                        'response': {
+                            'text': text,
+                            'buttons': [
+                                {
+                                    'title': 'Построить маршрут',
+                                    'payload': {},
+                                    'url': rout_url,
+                                    'hide': "true"
+                                }
+                            ],
+                            'end_session': False
+                        },
+                        'version': request.json["version"],
+                        'session': request.json["session"],
+                    }
     return json.dumps(response)
 
 
