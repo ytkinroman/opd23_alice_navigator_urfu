@@ -4,17 +4,20 @@ import sqlite3
 
 app = Flask(__name__)
 
-"""
-    request — запрос, который поступил от Алисы.
-    response — ответ нашего сервера, который отправляется Алисе.
-"""
 
-
-def get_data_from_database(corpus, auditorium):
-    with sqlite3.connect("db.db") as db:
+def get_data_from_database(corpus, auditorium, database="db.db", table="test"):
+    """
+    Получает данные из указанной таблицы базы данных SQLite3 на основе предоставленных параметров корпуса и аудитории.
+    Параметры:
+    - corpus (str): Идентификатор корпуса.
+    - auditorium (str): Идентификатор аудитории.
+    - database (str): Имя файла базы данных SQLite3 (по умолчанию "db.db").
+    - table (str): Имя таблицы базы данных (по умолчанию "test").
+    """
+    with sqlite3.connect(database) as db:
         cursor = db.cursor()
-        query = f""" SELECT * FROM test WHERE c = '{corpus}' AND au = '{auditorium}' """
-        cursor.execute(query)
+        query = f""" SELECT * FROM {table} WHERE c = ? AND au = ? """
+        cursor.execute(query, (corpus, auditorium))
         result = cursor.fetchone()  # Картеж строки из базы данных.
 
         if result is None:
@@ -23,7 +26,8 @@ def get_data_from_database(corpus, auditorium):
             return result
 
 
-def symbols_classroom(classroom):  # "р432" --> ["р", 432]
+def symbols_classroom(classroom):
+    # "р432" --> ["р", 432]
     characters = []
     numbers = []
     current_character = ""
@@ -67,58 +71,57 @@ def symbols_classroom(classroom):  # "р432" --> ["р", 432]
     return result
 
 
-def get_message_p1(t):
-    r = f"Аудитория \"{t[0].upper()}-{t[2]}\" – {t[1]}. Находится по адресу: {t[6]}."
-    return r
+def get_message_p1(auditorium_data):
+    """Формирует строку с информацией о номере и типе аудитории, а также её адрес."""
+    result_data = f"Аудитория \"{auditorium_data[0].upper()}-{auditorium_data[2]}\" – {auditorium_data[1]}. Находится по адресу: {auditorium_data[6]}."
+    return result_data
 
 
-def get_message_p2(t):
-    if t[5] == "цокольный":
-        r = f" Cпуститесь на цокольный этаж."
-        return r
-    elif t[5] == "первый":
-        return " Первый этаж."
-    elif t[5] is not None:
-        r = f" Поднимитесь по лестнице на {t[5]} этаж."
-        return r
+def get_message_p2(auditorium_data):
+    """Формирует строку о местоположении аудитории на этаже."""
+    if auditorium_data[5] == "цокольный":
+        result_data = f"Cпуститесь на цокольный этаж."
+        return result_data
+    elif auditorium_data[5] == "первый":
+        return "Первый этаж."
+    elif auditorium_data[5] is not None:
+        result_data = f"Поднимитесь по лестнице на {auditorium_data[5]} этаж."
+        return result_data
     else:
         return ""
 
 
-def get_message_p3(t):
-    if not t[4] is None:
-        r = f" Пройдите в {t[4]} крыло."
-        return r
+def get_message_p3(auditorium_data):
+    """Формирует строку о расположении аудитории относительно крыла."""
+    if not auditorium_data[4] is None:
+        result_data = f"Пройдите в {auditorium_data[4]} крыло."
+        return result_data
     else:
-        return " Аудитория находится в центральной части."
+        return "Аудитория находится в центральной части."
 
 
-def get_message_p4(t):
-    if not t[8] is None:
-        return " " + t[8]
+def get_message_p4(auditorium_data):
+    """Формирует строку с дополнительной информацией об аудитории."""
+    if not auditorium_data[8] is None:
+        return "" + auditorium_data[8]
     else:
         return ""
 
 
-def get_message(t):
+def get_message(auditorium_data):
     """
-    Текст.
+    Формирует итоговое сообщение с информацией об аудитории.
+    Параметры:
+    - auditorium_data (tuple): Кортеж с данными об аудитории.
+    Возвращается:
+    - str: Итоговое сообщение с информацией об аудитории.
     """
-    return get_message_p1(t) + get_message_p3(t) + get_message_p4(t) + get_message_p2(t)
-
-
-# Не работает из-за Railway(
-def save_metric(req):
-    user_request = req["request"]["original_utterance"]
-    with open("metric.txt", "a") as metric_file:
-        metric_file.write(user_request + "\n")
-        #print(user_request)
-        print(user_request, flush=True)
+    return f"{get_message_p1(auditorium_data)} {get_message_p3(auditorium_data)} {get_message_p4(auditorium_data)} {get_message_p2(auditorium_data)}"
 
 
 @app.route("/alice-webhook", methods=["POST"])
 def main():
-    req = request.json  # получаем запрос
+    req = request.json  # Получаем запрос.
     response = {  # Формируем базовый ответ.
         "version": request.json["version"],
         "session": request.json["session"],
@@ -126,22 +129,20 @@ def main():
             "end_session": False
         }
     }
-    if req["session"]["new"]:  # Приветствие.
+    if req["session"]["new"]:  # Обработка запроса. Приветствие.
         response["response"]["text"] = "Привет! Я помогу найти тебе аудиторию. Какую аудиторию ты ищешь? (Примечание: Скажите только название аудитории, например И-125, Т-1010)."
     else:
         if req["request"]["original_utterance"]:
 
-            m = ' '.join(req["request"]["nlu"]["tokens"])  # Р-0123      Р 23 Б     С,01      т1010 --> [Р,123]
+            m = ' '.join(req["request"]["nlu"]["tokens"])  # Р-0123      Р 23 Б     С,01      Т-1010 --> [т,1010]
             l = symbols_classroom(m)
             c = l[0].lower()  # Корпус.
             au = str(l[1])  # Аудитория.
 
             if len(l) > 2 and l[2] in l:
                 a2 = l[2]  # буква кабинета
-                au + a2
-                print(au)
+                print(au + a2)
 
-            #Save_metric(req) # Сохраняем запросс пользователя.
             res = get_data_from_database(c, au)
 
             if res is None:
@@ -167,8 +168,6 @@ def main():
                     'version': request.json["version"],
                     'session': request.json["session"],
                 }
-        else:
-            response["response"]["text"] = ""
     return json.dumps(response)
 
 
