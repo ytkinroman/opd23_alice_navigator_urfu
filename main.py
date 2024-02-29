@@ -135,6 +135,7 @@ def main():
     else:
         if req["request"]["original_utterance"]:
             tokens = req["request"]["nlu"]["tokens"]
+            rout_url = None
             s = []
             for token in tokens:
                 s.append(token.lower())
