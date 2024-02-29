@@ -63,6 +63,15 @@ def symbols_classroom(classroom):
     return result
 
 
+
+def check_for_digits(tokens):
+    for i in range(1, len(tokens)):
+        if tokens[i].isdigit():
+            return (tokens[i], tokens[i - 1])
+    return None, None
+
+
+
 def get_message_p1(auditorium_data):
     """Формирует строку с информацией о номере и типе аудитории, а также её адрес."""
     result_data = f"Аудитория \"{auditorium_data[0].upper()}-{auditorium_data[2]}\" – {auditorium_data[1]}. Находится по адресу: {auditorium_data[6]}."
@@ -125,22 +134,13 @@ def main():
         response["response"]["text"] = "Привет! Я помогу найти тебе аудиторию. Какую аудиторию ты ищешь? (Примечание: Скажите только название аудитории, например И-125, Т-1010)."
     else:
         if req["request"]["original_utterance"]:
-
-            m = ' '.join(req["request"]["nlu"]["tokens"])  # Р-0123      Р 23 Б     С,01      Т-1010 --> [т,1010]
-            l = symbols_classroom(m)
-
-            if len(l) < 2: # Для того чтобы Алиса игнорировала случайные значения или запросы
-                response["response"]["text"] = "Пожалуйста, укажите название аудитории в формате, например, И-125 или Т-1010."
-            else:
-                c = l[0].lower()  # Корпус.
-                au = str(l[1])  # Аудитория.
-
-                if len(l) > 2 and l[2] in l:
-                    a2 = l[2]  # буква кабинета
-                    print(au + a2)
-
-                res = get_data_from_database(c, au)
-
+            tokens = req["request"]["nlu"]["tokens"]
+            s = []
+            for token in tokens:
+                s.append(token.lower())
+            au, cor = check_for_digits(tokens)
+            if au and cor:
+                res = get_data_from_database(str(cor), str(au))
                 if res is None:
                     text = "Аудитория не найдена..."
                     response["response"]["text"] = text
@@ -148,23 +148,26 @@ def main():
                     t = res
                     text = get_message(t)
                     rout_url = t[7]
-                    response = {
-                        'response': {
-                            'text': l,
-                            'buttons': [
-                                {
-                                    'title': 'Построить маршрут',
-                                    'payload': {},
-                                    'url': rout_url,
-                                    'hide': "true"
-                                }
-                            ],
-                            'end_session': False
-                        },
-                        'version': request.json["version"],
-                        'session': request.json["session"],
-                    }
+            else:
+                text = "Аудитория не найдена..."
+            response = {
+                'response': {
+                    'text': text,
+                    'buttons': [
+                        {
+                            'title': 'Построить маршрут',
+                            'payload': {},
+                            'url': rout_url,
+                            'hide': "true"
+                        }
+                    ],
+                    'end_session': False
+                },
+                'version': request.json["version"],
+                'session': request.json["session"],
+            }
     return json.dumps(response)
+
 
 
 if __name__ == "__main__":
