@@ -6,14 +6,6 @@ app = Flask(__name__)
 
 
 def get_data_from_database(corpus, auditorium, database="db.db", table="test"):
-    """
-    Получает данные из указанной таблицы базы данных SQLite3 на основе предоставленных параметров корпуса и аудитории.
-    Параметры:
-    - corpus (str): Идентификатор корпуса.
-    - auditorium (str): Идентификатор аудитории.
-    - database (str): Имя файла базы данных SQLite3 (по умолчанию "db.db").
-    - table (str): Имя таблицы базы данных (по умолчанию "test").
-    """
     with sqlite3.connect(database) as db:
         cursor = db.cursor()
         query = f""" SELECT * FROM {table} WHERE c = ? AND au = ? """
@@ -158,7 +150,7 @@ def main():
                     rout_url = t[7]
                     response = {
                         'response': {
-                            'text': text,
+                            'text': l,
                             'buttons': [
                                 {
                                     'title': 'Построить маршрут',
