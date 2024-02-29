@@ -131,7 +131,7 @@ def main():
         }
     }
     if req["session"]["new"]:  # Обработка запроса. Приветствие.
-        response["response"]["text"] = "Привет! Я помогу найти тебе аудиторию. Какую аудиторию ты ищешь? (Примечание: Скажите только название аудитории, например И-125, Т-1010)."
+        response["response"]["text"] = "Привет! Я помогу найти тебе аудиторию. Какую аудиторию ты ищешь?"
     else:
         if req["request"]["original_utterance"]:
             tokens = req["request"]["nlu"]["tokens"]
@@ -143,14 +143,14 @@ def main():
             if au and cor:
                 res = get_data_from_database(str(cor), str(au))
                 if res is None:
-                    text = "Аудитория не найдена..."
+                    text = "Аудитория не найдена в базе данных..."
                     response["response"]["text"] = text
                 else:
                     t = res
                     text = get_message(t)
                     rout_url = t[7]
             else:
-                text = "Аудитория не найдена..."
+                text = "Аудитория в тексте не найдена..."
             if rout_url:
                 response = {
                     'response': {
