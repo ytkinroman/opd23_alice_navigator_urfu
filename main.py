@@ -150,22 +150,32 @@ def main():
                     rout_url = t[7]
             else:
                 text = "Аудитория не найдена..."
-            response = {
-                'response': {
-                    'text': text,
-                    'buttons': [
-                        {
-                            'title': 'Построить маршрут',
-                            'payload': {},
-                            'url': rout_url,
-                            'hide': "true"
-                        }
-                    ],
-                    'end_session': False
-                },
-                'version': request.json["version"],
-                'session': request.json["session"],
-            }
+            if rout_url:
+                response = {
+                    'response': {
+                        'text': text,
+                        'buttons': [
+                            {
+                                'title': 'Построить маршрут',
+                                'payload': {},
+                                'url': rout_url,
+                                'hide': "true"
+                            }
+                        ],
+                        'end_session': False
+                    },
+                    'version': request.json["version"],
+                    'session': request.json["session"],
+                }
+            else:
+                response = {
+                    'response': {
+                        'text': text,
+                        'end_session': False
+                    },
+                    'version': request.json["version"],
+                    'session': request.json["session"],
+                }
     return json.dumps(response)
 
 
